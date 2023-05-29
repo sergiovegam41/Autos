@@ -62,9 +62,9 @@ class ResponsesSystemBot extends Controller
 
                    $info = Prospectos::where('contact_1',$phone)->first();
 
-                   $info = $info->toArray();
-                   $mjs = "ID:".$info['id']."\nNombre: ".$info['names']."\nApellidos: ".$info['last_names']."\nTelefono: ".$info['contact_1']."\nEmail: ".$info['email_1']."\nDireccion: ".$info['adress'];
                    if($info){
+                       $info = $info->toArray();
+                       $mjs = "ID:".$info['id']."\nNombre: ".$info['names']."\nApellidos: ".$info['last_names']."\nTelefono: ".$info['contact_1']."\nEmail: ".$info['email_1']."\nDireccion: ".$info['adress'];
                        BotWhatsApp::senMessage($phone,$mjs);
                    }else{
                        BotWhatsApp::senMessage($phone,"No se encontraron datos.");
