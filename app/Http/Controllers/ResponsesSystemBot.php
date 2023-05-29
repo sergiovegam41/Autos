@@ -20,11 +20,14 @@ class ResponsesSystemBot extends Controller
 
 
       $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
+      BotWhatsApp::senMessage($phone,$gpt_response);
 
       try {
           $result = self::parseJson($gpt_response);
 
           $decode = json_decode(json_encode(["message"=>$result[0], "accion"=>$result[1]]));
+          BotWhatsApp::senMessage($phone,"decode");
+          BotWhatsApp::senMessage($phone,$decode);
 
 //          dd($decode->message);
          if($decode){
