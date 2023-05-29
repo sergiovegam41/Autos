@@ -16,7 +16,10 @@ class ResponsesSystemBot extends Controller
     const hostPoe = "https://principalpoebot.onrender.com";
   static  function  whatsapp_webhook($phone, $message,$purge){
 
-    $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
+      BotWhatsApp::senMessage($phone,"Voy");
+
+
+      $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
 
       try {
           $result = self::parseJson($gpt_response);
