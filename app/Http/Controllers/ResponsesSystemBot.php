@@ -16,18 +16,12 @@ class ResponsesSystemBot extends Controller
     const hostPoe = "https://principalpoebot.onrender.com";
   static  function  whatsapp_webhook($phone, $message,$purge){
 
-      BotWhatsApp::senMessage($phone,"Voy");
-
-
-      $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
-      BotWhatsApp::senMessage($phone,$gpt_response);
+    $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
 
       try {
           $result = self::parseJson($gpt_response);
 
           $decode = json_decode(json_encode(["message"=>$result[0], "accion"=>$result[1]]));
-          BotWhatsApp::senMessage($phone,"decode");
-          BotWhatsApp::senMessage($phone,$decode);
 
 //          dd($decode->message);
          if($decode){
@@ -73,7 +67,7 @@ class ResponsesSystemBot extends Controller
                        $mjs = "ID:".$info['id']."\nNombre: ".$info['names']."\nApellidos: ".$info['last_names']."\nTelefono: ".$info['contact_1']."\nEmail: ".$info['email_1']."\nDireccion: ".$info['adress'];
                        BotWhatsApp::senMessage($phone,$mjs);
                    }else{
-                       BotWhatsApp::senMessage($phone,"No se encontraron datos.");
+                       BotWhatsApp::senMessage($phone,"No se encontraron datos asociadas a: $phone");
                    }
 
                }catch (\Exception $exception){
