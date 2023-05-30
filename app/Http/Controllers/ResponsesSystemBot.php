@@ -59,7 +59,7 @@ class ResponsesSystemBot extends Controller
                    BotWhatsApp::senMessage($phone,"Consultando perfil...");
 
 
-                   $info = Prospectos::where('contact_1',$phone)->first();
+                   $info = Customers::where('phone',$phone)->first();
 
                    if($info){
                        $info = $info->toArray();
