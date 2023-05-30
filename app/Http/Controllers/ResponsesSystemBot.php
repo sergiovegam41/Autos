@@ -21,11 +21,13 @@ class ResponsesSystemBot extends Controller
       try {
 
             $lista = explode('[SPL]',trim($gpt_response));
+
+//            dd($lista);
              BotWhatsApp::senMessage($phone,$lista[0]);
 
               foreach($lista as $accion){
                   if(strlen($accion)>0 && strtolower($accion)!="void"){
-                      self::executeAction($accion,$phone);
+                      self::executeAction(trim($accion),$phone);
                   }
               }
 
@@ -45,6 +47,7 @@ class ResponsesSystemBot extends Controller
 
     static function executeAction($code = "void",$phone){
 
+//        dd($code);
         switch ($code) {
             case "clear":
                 self::sendGptMessage($phone,".",'purge',"2",true);
