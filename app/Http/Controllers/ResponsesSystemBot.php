@@ -19,22 +19,19 @@ class ResponsesSystemBot extends Controller
     $gpt_response = self::sendGptMessage($phone,"Cliente: ".$message,'send',"2",$purge);
 
       try {
-          $result = self::parseJson($gpt_response);
 
-          $decode = json_decode(json_encode(["message"=>$result[0], "accion"=>$result[1]]));
+            $lista = explode('[SPL]',trim($gpt_response));
+             BotWhatsApp::senMessage($phone,$lista[0]);
 
-//          dd($decode->message);
-         if($decode){
+              foreach($lista as $accion){
+                  if(strlen($accion)>0 && strtolower($accion)!="void"){
+                      self::executeAction($accion,$phone);
+                  }
+              }
 
-             BotWhatsApp::senMessage($phone,$decode->message);
 
-             if(strlen($decode->accion)>0 && strtolower($decode->accion)!="void"){
-                 self::executeAction($decode->accion,$phone);
-             }
 
-         }else{
-             BotWhatsApp::senMessage($phone,$gpt_response);
-         }
+
 
       }catch (\Exception $e){
 //          dd($e);
@@ -57,7 +54,7 @@ class ResponsesSystemBot extends Controller
             case "perfil":
 
                try {
-                   BotWhatsApp::senMessage($phone,"consultando perfil asociado a: $phone");
+                   BotWhatsApp::senMessage($phone,"Consultando perfil...");
 
 
                    $info = Prospectos::where('contact_1',$phone)->first();
@@ -76,17 +73,33 @@ class ResponsesSystemBot extends Controller
                 break;
             case "order":
 
-                BotWhatsApp::senMessage($phone,"consultando ordenes asociadas a: $phone");
+                BotWhatsApp::senMessage($phone,"Consultando ordenes...");
                 $customer = Customers::where('phone',$phone)->first();
                 $orders = Orders::where('customers_id', $customer->id )->get()->toArray();
-                BotWhatsApp::senMessage($phone,json_encode($orders));
+
+                if(count($orders) == 0){
+                    BotWhatsApp::senMessage($phone,"No tienes ninguna Orden asociada a: $phone");
+                }else{
+                    foreach ( $orders as $order){
+                        BotWhatsApp::senMessage($phone,json_encode($order));
+                    }
+                }
+
 
                 break;
             case "stock":
 
                 BotWhatsApp::senMessage($phone,"consultando stock actual...");
                 $stock = StockRepo::getLastStock(1);
-                BotWhatsApp::senMessage($phone,json_encode($stock));
+
+
+                if(count($stock) == 0){
+                    BotWhatsApp::senMessage($phone,"No tienes ninguna Orden asociada a: $phone");
+                }else{
+                    foreach ( $stock as $s){
+                        BotWhatsApp::senMessage($phone,json_encode($s));
+                    }
+                }
 
                 break;
         }
@@ -133,14 +146,14 @@ class ResponsesSystemBot extends Controller
         return $resp->data->message;
 
     }
-    function parseJson($jsonString) {
-        $texto1 = explode('{"message":"',trim($jsonString));
-        $texto = explode('","accion":"', $texto1[1]);
-        if(count($texto)<2){
-            $texto = explode('", "accion":"', $texto1[1]);
-        }
-        $action = explode('"}', $texto[1])[0];
-        $message = $texto[0];
-        return array($message,$action);
-    }
+//    function parseJson($jsonString) {
+//        $texto1 = explode('{"message":"',trim($jsonString));
+//
+//
+//        $texto = explode('","accion":"', $texto1[1]);
+//
+//        $action = explode('"}', $texto[1])[0];
+//        $message = $texto[0];
+//        return array($message,$action);
+//    }
 }
