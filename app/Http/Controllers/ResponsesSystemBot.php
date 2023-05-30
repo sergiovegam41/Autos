@@ -63,7 +63,7 @@ class ResponsesSystemBot extends Controller
 
                    if($info){
                        $info = $info->toArray();
-                       $mjs = "ID:".$info['id']."\nNombre: ".$info['names']."\nApellidos: ".$info['last_names']."\nTelefono: ".$info['contact_1']."\nEmail: ".$info['email_1']."\nDireccion: ".$info['adress'];
+                       $mjs = "ID:".$info['id']."\nNombre: ".$info['name']."\nApellidos: ".$info['last_name']."\nTelefono: ".$info['phone']."\nEmail: ".$info['email']."\nDireccion: ".$info['address'];
                        BotWhatsApp::senMessage($phone,$mjs);
                    }else{
                        BotWhatsApp::senMessage($phone,"No se encontraron datos asociadas a: $phone");
