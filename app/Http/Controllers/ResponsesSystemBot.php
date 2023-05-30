@@ -83,7 +83,8 @@ class ResponsesSystemBot extends Controller
                     BotWhatsApp::senMessage($phone,"No tienes ninguna Orden asociada a: $phone");
                 }else{
                     foreach ( $orders as $order){
-                        BotWhatsApp::senMessage($phone,json_encode($order));
+                        $mjs = "ID:".$order['order_number']."\nEstado: ".$order['status']."\nFecha: ".$order['created_at']."\nTotal pagar: ".$order['grand_total'];
+                        BotWhatsApp::senMessage($phone,($mjs));
                     }
                 }
 
@@ -99,10 +100,16 @@ class ResponsesSystemBot extends Controller
                     BotWhatsApp::senMessage($phone,"No tienes ninguna Orden asociada a: $phone");
                 }else{
                     foreach ( $stock as $s){
-                        BotWhatsApp::senMessage($phone,json_encode($s));
+                        $mjs = "Imagen:".$s['picture']."\nNombre: ".$s['name']."\nDisponibles: ".$s['quantity']."\nCosto: ".$s['price']."\nDescripcion: ".$s['public_description'] ;
+                        BotWhatsApp::senMessage($phone,($mjs));
                     }
                 }
 
+                break;
+
+              case "need_call":
+
+                BotWhatsApp::senMessage($phone,"Ha sido añadido a la cola de atención al cliente, prepárese para recibir una llamada 📞.");
                 break;
         }
 
