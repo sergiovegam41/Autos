@@ -27,7 +27,7 @@ class ResponsesSystemBot extends Controller
 
               foreach($lista as $accion){
                   if(strlen($accion)>0 && strtolower($accion)!="void"){
-                      self::executeAction(trim(strtolower(explode(" ",$accion)[0])),$phone);
+                      self::executeAction(trim(strtolower($accion),$phone));
                   }
               }
 
