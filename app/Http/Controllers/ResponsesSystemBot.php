@@ -18,6 +18,7 @@ class ResponsesSystemBot extends Controller
 
 
       try {
+
             $gpt_response = self::sendGptMessage($phone,$message,'send',"2",$purge);
 
             $lista = explode('[SPL]', trim($gpt_response));
@@ -147,7 +148,7 @@ class ResponsesSystemBot extends Controller
            return "";
         }
 
-        dd($resp);
+//        dd($resp);
 
         return $resp->data->message;
 
