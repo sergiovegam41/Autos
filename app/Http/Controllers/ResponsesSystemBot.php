@@ -20,19 +20,15 @@ class ResponsesSystemBot extends Controller
       try {
             $gpt_response = self::sendGptMessage($phone,$message,'send',"2",$purge);
 
-            $lista = explode('[SPL]',trim($gpt_response));
+            $lista = explode('[SPL]', trim($gpt_response));
 
              BotWhatsApp::senMessage($phone,$lista[0]);
 
               foreach($lista as $accion){
                   if(strlen($accion)>0 && strtolower($accion)!="void"){
-                      self::executeAction(trim($accion),$phone);
+                      self::executeAction(trim(strtolower(explode(" ",$accion)[0])),$phone);
                   }
               }
-
-
-
-
 
       }catch (\Exception $e){
 //          dd($e);
@@ -134,7 +130,6 @@ class ResponsesSystemBot extends Controller
                 "message"=>$message,
                 "phone"=>$phone,
                 "purge"=>$purge,
-//                "bot"=>$bot,
                 "defaultProntID"=>$botID
             ]),
             CURLOPT_HTTPHEADER => array(
@@ -151,6 +146,8 @@ class ResponsesSystemBot extends Controller
         if($method == "purge"){
            return "";
         }
+
+        dd($resp);
 
         return $resp->data->message;
 
